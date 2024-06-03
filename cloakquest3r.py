@@ -136,11 +136,7 @@ def find_subdomains_with_ssl_analysis(domain, wordlist_path=None, timeout=20):
 
     if wordlist_path is None:
         default_wordlist = "wordlist.txt"
-        wordlist_path = input(f"\n{Fore.CYAN}> Do you have a custom wordlist for subdomain scanning? {Fore.GREEN}(yes/no): ").lower()
-        if wordlist_path == "yes":
-            wordlist_path = input(f"\n{Fore.CYAN}> Enter the path to your custom wordlist: {Fore.GREEN}")
-        else:
-            wordlist_path = default_wordlist
+        wordlist_path = default_wordlist
 
     with open(wordlist_path, "r") as file:
         subdomains = [line.strip() for line in file.readlines()]
@@ -301,17 +297,14 @@ if __name__ == "__main__":
         technology = detect_web_server(domain)
         print(f"\n{Fore.GREEN}[+] {C}Website is using: {Fore.GREEN} {technology}")
 
-        proceed = input(f"\n{Fore.YELLOW}> Do you want to proceed? {Fore.GREEN}(yes/no): ").lower()
+        print(f"\n{R}Target Website: {W}{domain}")
+        print(f"{R}Visible IP Address: {W}{CloudFlare_IP}\n")
+        get_domain_historical_ip_address(domain)
+        securitytrails_historical_ip_address(domain)
 
-        if proceed == "yes":
-            print(f"\n{R}Target Website: {W}{domain}")
-            print(f"{R}Visible IP Address: {W}{CloudFlare_IP}\n")
-            get_domain_historical_ip_address(domain)
-            securitytrails_historical_ip_address(domain)
-
-            print(f"{Fore.GREEN}[+] {Fore.YELLOW}Scanning for subdomains.{Fore.RESET}")
-            if "wordlist_path" not in locals():
-                download_wordlist(default_wordlist)
+        print(f"{Fore.GREEN}[+] {Fore.YELLOW}Scanning for subdomains.{Fore.RESET}")
+        if "wordlist_path" not in locals():
+            download_wordlist(default_wordlist)
             find_subdomains_with_ssl_analysis(domain)
         else:
             print(f"{R}Operation aborted. Exiting...{W}")
